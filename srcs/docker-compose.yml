@@ -1,0 +1,97 @@
+
+services:
+  nginx:
+    build:
+      context: ./requirements/nginx
+      dockerfile: Dockerfile
+    container_name: nginx
+    restart: unless-stopped
+    ports:
+      - "443:443"
+    volumes:
+      - wordpress:/var/www/html
+    networks:
+      - front-net
+      - back-net
+    depends_on:
+      - wordpress
+      - portfolio
+      - adminer
+
+  wordpress:
+    build:
+      context: ./requirements/wordpress
+      dockerfile: Dockerfile
+    container_name: wordpress
+    restart: unless-stopped
+    volumes:
+      - wordpress:/var/www/html
+    env_file:
+      - ./.env
+    depends_on:
+      - mariadb
+    networks:
+      - back-net
+      - front-net
+    ports:
+      - "9000:9000"
+
+  mariadb:
+    build:
+      context: ./requirements/mariadb
+      dockerfile: Dockerfile
+    container_name: mariadb
+    restart: unless-stopped
+    volumes:
+      - mariadb:/var/lib/mysql
+    env_file:
+      - ./.env
+    ports:
+      - "3306:3306"
+    networks:
+      - back-net
+
+  adminer:
+    build:
+      context: ./requirements/bonus/adminer
+      dockerfile: Dockerfile
+    container_name: adminer
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    networks:
+      - back-net
+    depends_on:
+      - mariadb
+
+  portfolio:
+    build:
+      context: ./requirements/bonus/portfolio
+    container_name: portfolio
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    networks:
+      - front-net
+
+volumes:
+  wordpress:
+    name: wordpress
+    driver: local
+    driver_opts:
+      device: /home/elcid/Desktop/aghergho/data/html
+      o: bind
+      type: none
+  mariadb:
+    name: mariadb
+    driver: local
+    driver_opts:
+      device: /home/elcid/Desktop/aghergho/data/mysql
+      o: bind
+      type: none
+
+networks:
+  front-net:
+    name: front-net
+  back-net:
+    name: back-net

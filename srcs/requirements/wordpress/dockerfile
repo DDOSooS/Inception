@@ -1,0 +1,40 @@
+FROM alpine:3.19
+
+RUN apk add --no-cache \
+    php83 \
+    php83-cli \
+    php83-fpm \
+    php83-phar \
+    php83-mysqli \
+    php83-json \
+    php83-xml \
+    php83-dom \
+    php83-mbstring \
+    php83-curl \
+    php83-zip \
+    php83-gd \
+    php83-openssl \
+    curl \
+    tar \
+    netcat-openbsd
+
+#
+# ----- THIS IS THE NEW FIX -----
+#
+# Edit the PHP configuration file for the command line (cli).
+# Find 'memory_limit = 128M' and replace it with 'memory_limit = -1' (unlimited).
+# This gives wp-cli enough memory to run the download/extract task.
+#
+RUN sed -i 's/memory_limit = 128M/memory_limit = -1/' /etc/php83/php.ini
+
+
+RUN ln -s /usr/bin/php83 /usr/bin/php
+
+RUN sed -i 's/listen = 127.0.0.1:9000/listen = 9000/' /etc/php83/php-fpm.d/www.conf
+
+COPY ./tools/exec_script.sh /
+RUN chmod +x /exec_script.sh
+
+EXPOSE 9000
+
+CMD ["/exec_script.sh"]
