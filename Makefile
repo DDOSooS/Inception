@@ -1,7 +1,7 @@
 .PHONY: up down restart logs clean build rebuild
 
 DOCKER_COMPOSE = docker compose -f ./srcs/docker-compose.yml
-DATA_DIR = /home/elcid/Desktop/aghergho/data
+DATA_DIR = /home/aghergho/data
 HTML_DIR = $(DATA_DIR)/html
 MYSQL_DIR = $(DATA_DIR)/mysql
 
@@ -31,4 +31,4 @@ clean:
 build:
 	@$(DOCKER_COMPOSE) build
 
-re: clean build up
+rebuild: clean build up

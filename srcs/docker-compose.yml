@@ -79,14 +79,14 @@ volumes:
     name: wordpress
     driver: local
     driver_opts:
-      device: /home/elcid/Desktop/aghergho/data/html
+      device: /home/aghergho/data/html
       o: bind
       type: none
   mariadb:
     name: mariadb
     driver: local
     driver_opts:
-      device: /home/elcid/Desktop/aghergho/data/mysql
+      device: /home/aghergho/data/mysql
       o: bind
       type: none
 
