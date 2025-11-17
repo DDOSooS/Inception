@@ -18,13 +18,7 @@ RUN apk add --no-cache \
     tar \
     netcat-openbsd
 
-#
-# ----- THIS IS THE NEW FIX -----
-#
-# Edit the PHP configuration file for the command line (cli).
-# Find 'memory_limit = 128M' and replace it with 'memory_limit = -1' (unlimited).
-# This gives wp-cli enough memory to run the download/extract task.
-#
+
 RUN sed -i 's/memory_limit = 128M/memory_limit = -1/' /etc/php83/php.ini
 
 

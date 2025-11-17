@@ -8,7 +8,9 @@ RUN apk update && apk add --no-cache \
       wget
 
 WORKDIR /var/www/html
+
 RUN wget "https://www.adminer.org/latest.php" -O adminer.php
 
 EXPOSE 8080
+
 CMD ["php83", "-S", "0.0.0.0:8080", "-t", "/var/www/html", "adminer.php"]
